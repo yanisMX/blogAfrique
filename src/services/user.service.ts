@@ -40,7 +40,8 @@ export const getUserByEmail = async (email : any) => {
     try {
         const user = await userRepository.findUserByEmail(email);
         const userPassword = user[0].password;
-        return {user, userPassword};
+        const userRole = user[0].role;
+        return {user, userPassword, userRole};
     }
     catch (error) {
         throw error;

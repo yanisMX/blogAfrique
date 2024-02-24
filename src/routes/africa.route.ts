@@ -4,11 +4,13 @@ import * as authMiddleware from '../middlewares/auth.middleware';
 
 const router = Router();
 
-router.post('/create/',africaController.createAfrica);
-router.post('/:id', africaController.updateAfricaById);
+// ADMIN
+router.post('/create/', authMiddleware.authenticateAccessToken, authMiddleware.authorizeAdmin ,africaController.createAfrica);
+router.post('/:id', authMiddleware.authenticateAccessToken, authMiddleware.authorizeAdmin, africaController.updateAfricaById);
+router.delete('/:id', authMiddleware.authenticateAccessToken, authMiddleware.authorizeAdmin, africaController.deleteAfricaById);
+
 router.get('/', africaController.getAllAfrica);
 router.get('/:id', africaController.getAfricaById);
-router.delete('/:id', africaController.deleteAfricaById);
 
 // router.get('/:id', taskController.getTask);
 export default router;

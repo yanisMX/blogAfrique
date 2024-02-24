@@ -2,20 +2,35 @@ import jwt from "jsonwebtoken";
 import { jwtConfig } from "../configs/jwt.configs";
 import bcrypt from 'bcrypt'
 
-export const generateAccessToken = (user) => {
+let tokenBlacklist = {};
+
+export const addToBlacklist = (token : string) => {
+  tokenBlacklist[token] = true;
+};
+
+export const generateAccessToken = (user : any) => {
+  const userData = {
+    email: user.email,
+    role: user.role
+  };
   return jwt.sign(user, jwtConfig.secret, { expiresIn: jwtConfig.expiresIn });
 };
 
-export const generateRefreshToken = async (user) => {
+export const generateRefreshToken = async (user : any) => {
+  const userData = {
+    email: user.email,
+    role: user.role
+  };
   return jwt.sign(user, jwtConfig.refreshSecret, { expiresIn: jwtConfig.refreshExpiresIn });
 };
 
 export const decodeAccessToken = (token) => {
   try {
     const decodedToken = jwt.verify(token, jwtConfig.secret);
+
     return decodedToken;
   } catch (error) {
-    return null;
+    throw new Error('Erreur lors du décodage du accessToken');
   }
 };
 
@@ -24,7 +39,7 @@ export const decodeRefreshToken = (token) => {
     const decodedToken = jwt.verify(token, jwtConfig.refreshSecret);
     return decodedToken;
   } catch (error) {
-    return null;
+    throw new Error('Erreur lors du décodage du refreshToken');
   }
 }
 
@@ -40,3 +55,4 @@ export const comparePassword = (password, hashedPassword) => {
   const isPasswordCorrect = bcrypt.compareSync(password, hashedPassword);
   return isPasswordCorrect
 }
+

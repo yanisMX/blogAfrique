@@ -6,9 +6,9 @@ import { stringDecode } from '../utils/string.utils';
 
 export const createAfrica = async (req: Request, res: Response) => {
   const africa : AfricaCreation = req.body;
-  const email : User = req.body.email;
+
   try {
-    const newAfrica = await AfricaService.createAfrica(africa, email);
+    const newAfrica = await AfricaService.createAfrica(africa);
     res.status(201).send(newAfrica);
   } catch (error) {
     res.status(500).send('Error creating blog Africa : You are not allowed to create a new article');
@@ -69,11 +69,10 @@ export const getAfricaById = async (req: Request, res: Response) => {
 
 
 export const deleteAfricaById = async (req: Request, res: Response) => {
-  const email = req.body.email;
   const articleId = req.params.id;
   
   try {
-      const deletedAfrica = await AfricaService.deleteAfricaById(articleId, email);
+      const deletedAfrica = await AfricaService.deleteAfricaById(articleId);
       
       // Vérifier si l'article a été trouvé et supprimé avec succès
       if (!deletedAfrica) {
@@ -91,9 +90,9 @@ export const deleteAfricaById = async (req: Request, res: Response) => {
 
 
 export const updateAfricaById = async (req: Request, res: Response) => {
-  const email = req.body.email;
+
   try {
-    const updatedAfrica = await AfricaService.updateAfricaById(req.params.id, req.body, email);
+    const updatedAfrica = await AfricaService.updateAfricaById(req.params.id, req.body);
     res.status(200).send(updatedAfrica);
   } catch (error) {
     res.status(500).send('Error updating blog Africa : ');

@@ -3,10 +3,7 @@ import { User } from "../types/user";
 import * as AfricaRepo from "../repositories/africa.repository";
 import * as userService from './user.service';
 
-export const createAfrica = async (africa: AfricaCreation, email: User) => {
-    const user = await userService.getUserByEmail(email);
-    if(user.user[0].role !== 'admin') throw new Error('You are not authorized to create an article');
-    
+export const createAfrica = async (africa: AfricaCreation) => {
   try {
     const createdAfrica = await AfricaRepo.createAfrica(africa);
     return createdAfrica;
@@ -62,9 +59,7 @@ export const getAfricaById = async (id: string) => {
   }
   
 
-export const deleteAfricaById = async (id : any, email) => {
-    const user = await userService.getUserByEmail(email);
-    if(user.user[0].role !== 'admin') throw new Error('You are not authorized to delete an article');
+export const deleteAfricaById = async (id : any) => {
     try{
         const deletedAfrica = await AfricaRepo.deleteAfricaById(id)
         return deletedAfrica;
@@ -74,9 +69,7 @@ export const deleteAfricaById = async (id : any, email) => {
     }
 }
 
-export const updateAfricaById = async (id : any, africa : any, email) => {
-    const user = await userService.getUserByEmail(email);
-    if(user.user[0].role !== 'admin') throw new Error('You are not authorized to update an article');
+export const updateAfricaById = async (id : any, africa : any) => {
     try{
         const updatedAfrica = await AfricaRepo.updateAfricaById(id, africa)
         return updatedAfrica;
