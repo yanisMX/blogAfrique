@@ -12,8 +12,10 @@ router.delete('/:id', authMiddleware.authenticateAccessToken, authMiddleware.aut
 // Lire un article et gestion des commentaires un commentaire
 router.get('/:id', africaController.getAfricaById);
 router.post('/:id/comment', authMiddleware.authenticateAccessToken, africaController.createComment);
-router.delete('/:id/comment/:commentId', authMiddleware.authenticateAccessToken, africaController.deleteComment);
 router.get('/:id/comment/:commentId', africaController.getCommentById);
+
+// Modifier et supprimer un commentaire
+router.delete('/:id/comment/:commentId', authMiddleware.authenticateAccessToken, authMiddleware.actionComment, africaController.deleteComment);
 router.put('/:id/comment/:commentId', authMiddleware.authenticateAccessToken, africaController.updateCommentById);
 // Observer les articles
 router.get('/', africaController.getAllAfrica);

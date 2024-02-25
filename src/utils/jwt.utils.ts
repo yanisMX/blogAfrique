@@ -10,6 +10,7 @@ export const addToBlacklist = (token : string) => {
 
 export const generateAccessToken = (user : any) => {
   const userData = {
+    _id: user._id,
     email: user.email,
     role: user.role
   };
