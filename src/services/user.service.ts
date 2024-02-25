@@ -1,3 +1,4 @@
+import e from 'express';
 import * as userRepository from '../repositories/user.repository';
 import * as jwtUtils from '../utils/jwt.utils';
 
@@ -39,9 +40,14 @@ export const createUser = async (user : any) => {
 export const getUserByEmail = async (email : any) => {
     try {
         const user = await userRepository.findUserByEmail(email);
-        const userPassword = user[0].password;
-        const userRole = user[0].role;
-        return {user, userPassword, userRole};
+        if (user && user.length > 0){
+            const userId = user[0]._id;
+            const userPassword = user[0].password;
+            const userRole = user[0].role;
+            return {user, userPassword, userRole, userId};
+        }   else {
+            throw new Error('User not found');
+        }
     }
     catch (error) {
         throw error;
@@ -54,5 +60,14 @@ export const getAllUsers = async () => {
         return allUsers;
     } catch (error) {
         throw new error('Error getting all users');
+    }
+}
+
+export const getUserById = async (id: string) => {
+    try {
+        const user = await userRepository.findUserById(id);
+        return user;
+    } catch (error) {
+        throw new error('Error getting user by id');
     }
 }

@@ -5,7 +5,8 @@ export const login = async (req: Request, res: Response) => {
     const { email, password } = req.body;
   try {
     const user = await authService.login(email, password);
-    res.status(200).send('Connexion réussie ! \n' + JSON.stringify(user));
+
+    res.status(200).send('Connexion réussie ! \n' + JSON.stringify(user.accessToken));
 
   } catch (error) {
     console.error('Error object:', error);

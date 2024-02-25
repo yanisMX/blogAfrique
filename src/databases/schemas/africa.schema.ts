@@ -20,5 +20,18 @@ export const AfricaSchema = new mongoose.Schema({
     },
     CreatedAt: {
         type: Date,
-        default: Date()}
+        default: Date()},
+        comments: [
+            {
+                userId: {
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'User'
+                },
+                content: String,
+                createdAt: {
+                    type: Date,
+                    default: Date.now
+                }
+            }
+        ]
 });

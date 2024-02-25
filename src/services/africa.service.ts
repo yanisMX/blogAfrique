@@ -1,7 +1,7 @@
 import { AfricaCreation } from "../types/africa";
-import { User } from "../types/user";
 import * as AfricaRepo from "../repositories/africa.repository";
 import * as userService from './user.service';
+import * as jwtUtils from '../utils/jwt.utils';
 
 export const createAfrica = async (africa: AfricaCreation) => {
   try {
@@ -79,3 +79,68 @@ export const updateAfricaById = async (id : any, africa : any) => {
     }
 }
 
+
+export const createComment = async (id: any, comment: any, accessToken: string) => {
+    try {
+        const article = await AfricaRepo.getAfricaById(id);
+        
+        if (!article) {
+            throw new Error('Article not found');
+        }
+
+        // Décoder le token pour obtenir les informations de l'utilisateur
+        const userData = jwtUtils.decodeAccessToken(accessToken);
+        
+        // Vérifier si les informations de l'utilisateur existent et contiennent l'ID de l'utilisateur
+        if (!userData || !userData.email) {
+            throw new Error('User data not found in token');
+        }
+
+        // Récupérer l'utilisateur par son email
+        const user = await userService.getUserByEmail(userData.email);
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        // Ajouter automatiquement l'ID de l'utilisateur au commentaire
+        const createdComment = await AfricaRepo.createComment(id, { ...comment, userId: user.userId });
+        return createdComment;
+    
+    } catch(error) {
+        console.error('Could not create comment : Service Error', error);
+        throw new Error('Impossible de créer le commentaire : Erreur du Service');
+    }
+}
+
+export const deleteComment = async (id: any, commentId: any) => {
+    
+    try {
+        const deletedCommentId = await AfricaRepo.deleteComment(id, commentId);
+        return deletedCommentId;
+    } catch (error) {
+        console.error('Error deleting comment', error);
+        throw new Error('Erreur lors de la suppression du commentaire');
+    }
+}
+
+
+
+export const getCommentById = async (id: any, commentId: any) => {
+    try {
+        const comment = await AfricaRepo.getCommentById(id, commentId);
+        return comment;
+    } catch (error) {
+        console.error('Could not get comment by id : Service Error', error);
+        throw new Error('Impossible de récupérer le commentaire par id : Erreur du Service');
+    }
+}
+
+export const updateCommentById = async (id: any, commentId: any, comment: any) => {
+    try {
+        const updatedComment = await AfricaRepo.updateCommentById(id, commentId, comment);
+        return updatedComment;
+    } catch (error) {
+        console.error('Could not update comment by id : Service Error', error);
+        throw new Error('Impossible de mettre à jour le commentaire par id : Erreur du Service');
+    }
+}

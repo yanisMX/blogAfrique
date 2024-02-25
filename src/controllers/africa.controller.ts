@@ -99,3 +99,58 @@ export const updateAfricaById = async (req: Request, res: Response) => {
   }
 }
 
+
+export const createComment = async (req: Request, res: Response) => {
+    const articleId = req.params.id;
+    const comment = req.body;
+    const accessToken = req.headers.authorization;
+
+    try {
+        const createdComment = await AfricaService.createComment(articleId, comment, accessToken);
+        res.status(201).send(createdComment);
+    } catch (error) {
+        res.status(500).send('Erreur lors de la création du commentaire pour le blog Africa');
+    }
+}
+
+
+export const deleteComment = async (req: Request, res: Response) => {
+    const articleId = req.params.id;
+    const commentId = req.params.commentId;
+    const accessToken = req.headers.authorization;
+    
+    try {
+        const deletedCommentId = await AfricaService.deleteComment(articleId,commentId);
+        res.status(200).json({ message: `Comment with ID ${deletedCommentId} deleted successfully` });
+    } catch (error) {
+        console.error('Error deleting comment', error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+export const getCommentById = async (req: Request, res: Response) => {
+    const articleId = req.params.id;
+    const commentId = req.params.commentId;
+    
+    try {
+        const comment = await AfricaService.getCommentById(articleId, commentId);
+        res.status(200).send(comment);
+    } catch (error) {
+        console.error('Error getting comment by id', error);
+        res.status(500).json({ error: error.message });
+    }
+}
+
+export const updateCommentById = async (req: Request, res: Response) => {
+    const articleId = req.params.id;
+    const commentId = req.params.commentId;
+    const comment = req.body;
+    
+    try {
+        const updatedComment = await AfricaService.updateCommentById(articleId, commentId, comment);
+        res.status(200).send(updatedComment);
+    } catch (error) {
+        console.error('Error updating comment by id', error);
+        res.status(500).json({ error: error.message });
+    }
+}

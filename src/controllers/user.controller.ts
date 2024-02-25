@@ -31,3 +31,13 @@ export const getAllUsers = async (req: Request, res: Response) => {
         res.status(500).send('Error fetching all users');
     }
 }
+
+export const getUserById = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    try {
+        const user = await userService.getUserById(id);
+        res.status(200).send(user);
+    } catch (error) {
+        res.status(500).send('Error fetching user by id');
+    }
+}

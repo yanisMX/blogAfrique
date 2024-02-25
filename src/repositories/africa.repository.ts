@@ -65,3 +65,82 @@ export const updateAfricaById = async (id: string, africa: Africa) => {
     }
 }
 
+
+
+export const createComment = async (id: string, comment: any) => {
+    try {
+        const article = await AfricaModel.findById(id);
+        if (!article) {
+            throw new Error('Article not found');
+        }
+        
+        const createdComment = await AfricaModel.findByIdAndUpdate(
+            id,
+            { $push: { comments: comment } },
+            { new: true }
+        );
+        return createdComment;
+    } catch (error) {
+        console.error('Could not create comment : Repository Error', error);
+        throw new Error('Impossible de créer un commentaire : Erreur du Repository');
+    }
+}
+
+export const getCommentById = async (id: string, commentId: string) => {    
+    try {
+        const article = await AfricaModel.findById(id);
+        if (!article) {
+            throw new Error('Article not found');
+        }
+        
+        const comment = article.comments.find((comment: any) => comment._id == commentId);
+        return comment;
+    } catch (error) {
+        console.error('Could not get comment by id : Repository Error', error);
+        throw new Error('Impossible de récupérer le commentaire par id : Erreur du Repository');
+    }
+}
+
+export const deleteComment = async (id: string, commentId: string) => {
+    try {
+        const article = await AfricaModel.findById(id);
+        if (!article) {
+            throw new Error('Article not found');
+        }
+        
+        const commentIndex = article.comments.findIndex((comment: any) => comment._id == commentId);
+        if (commentIndex === -1) {
+            throw new Error('Comment not found');
+        }
+
+        article.comments.splice(commentIndex, 1);
+        await article.save();
+
+        return commentId;
+    } catch (error) {
+        console.error('Could not delete comment : Repository Error', error);
+        throw new Error('Impossible de supprimer le commentaire : Erreur du Repository');
+    }
+}
+
+export const updateCommentById = async (id: string, commentId: string, comment: any) => {
+    try {
+        const article = await AfricaModel.findById(id);
+        if (!article) {
+            throw new Error('Article not found');
+        }
+        
+        const commentIndex = article.comments.findIndex((comment: any) => comment._id == commentId);
+        if (commentIndex === -1) {
+            throw new Error('Comment not found');
+        }
+
+        article.comments[commentIndex] = { ...article.comments[commentIndex], ...comment };
+        await article.save();
+
+        return article.comments[commentIndex];
+    } catch (error) {
+        console.error('Could not update comment : Repository Error', error);
+        throw new Error('Impossible de mettre à jour le commentaire : Erreur du Repository');
+    }
+}

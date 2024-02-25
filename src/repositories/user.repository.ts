@@ -28,3 +28,12 @@ export const getAllUsers = async () => {
     throw new error('Error getting all users');
   }
 }
+
+export const findUserById = async (id) => {
+  try {
+    const user = await UserModel.findById(id)
+    return user
+  } catch (error) {
+    throw new error('Error getting user by id');
+  }
+}

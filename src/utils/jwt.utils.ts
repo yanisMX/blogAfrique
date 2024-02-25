@@ -13,7 +13,7 @@ export const generateAccessToken = (user : any) => {
     email: user.email,
     role: user.role
   };
-  return jwt.sign(user, jwtConfig.secret, { expiresIn: jwtConfig.expiresIn });
+  return jwt.sign(userData, jwtConfig.secret, { expiresIn: jwtConfig.expiresIn });
 };
 
 export const generateRefreshToken = async (user : any) => {
@@ -24,10 +24,9 @@ export const generateRefreshToken = async (user : any) => {
   return jwt.sign(user, jwtConfig.refreshSecret, { expiresIn: jwtConfig.refreshExpiresIn });
 };
 
-export const decodeAccessToken = (token) => {
+export const decodeAccessToken = (accessToken : string) => {
   try {
-    const decodedToken = jwt.verify(token, jwtConfig.secret);
-
+    const decodedToken = jwt.verify(accessToken, jwtConfig.secret) as { _id : string; email: string; role: string };
     return decodedToken;
   } catch (error) {
     throw new Error('Erreur lors du décodage du accessToken');
